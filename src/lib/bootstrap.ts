@@ -181,7 +181,7 @@ function listenDefaultCallback(webServer: Application, addr: any, pkgName: strin
           }),
       version: pkgName + '/' + pkgVersion,
     },
-    'http address - @{addr} - @{version}'
+    'http address - @{addr} - @{version} 由vivo本地维护'
   );
 }
 
