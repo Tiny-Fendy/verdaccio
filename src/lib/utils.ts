@@ -4,7 +4,6 @@ import { Request } from 'express';
 import fs from 'fs';
 import YAML from 'js-yaml';
 import _ from 'lodash';
-import memoizee from 'memoizee';
 import semver from 'semver';
 import DefaultURL, { URL } from 'url';
 import validator from 'validator';
@@ -155,21 +154,19 @@ export function convertDistRemoteToLocalTarballUrls(pkg: Package, req: Request, 
   return pkg;
 }
 
-const memoizedgetPublicUrl = memoizee(getPublicUrl);
-
 /**
  * Filter a tarball url.
  * @param {*} uri
  * @return {String} a parsed url
  */
-export function getLocalRegistryTarballUri(uri: string, pkgName: string, req: Request, urlPrefix: string | void): string {
+export function getLocalRegistryTarballUri(uri: string, pkgName: string, req: Request, urlPrefix: string = ''): string {
   const currentHost = req.get('host');
 
   if (!currentHost) {
     return uri;
   }
   const tarballName = extractTarballFromUrl(uri);
-  const domainRegistry = memoizedgetPublicUrl(urlPrefix || '', req);
+  const domainRegistry = getPublicUrl(urlPrefix, req);
 
   return `${domainRegistry}${encodeScopedUri(pkgName)}/-/${tarballName}`;
 }
